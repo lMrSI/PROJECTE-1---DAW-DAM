@@ -51,6 +51,8 @@
 
 ### Casos de uso
 
+![Logo](CasosDeUsoITIC.drawio.png)
+
 ### Wireframe
 
 ![Logo](/Wireframe/w1.jpg)
