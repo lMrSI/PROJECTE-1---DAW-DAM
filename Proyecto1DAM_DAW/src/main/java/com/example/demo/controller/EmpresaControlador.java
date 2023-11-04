@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,20 @@ import com.example.demo.model.Empresa;
 import com.example.demo.repository.EmpresaRepository;
 
 @RestController
+@RequestMapping("/empresas")
 public class EmpresaControlador {
+	@Autowired
+	private final EmpresaRepository empresaRepo;
+	
+	public EmpresaControlador (EmpresaRepository empresaRepo) {
+		this.empresaRepo = empresaRepo;
+		
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<Empresa>> getEmpresas() {
+		List<Empresa> empresas = empresaRepo.findAll();
+		return ResponseEntity.ok(empresas);
+	}
 	
 }

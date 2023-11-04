@@ -15,7 +15,7 @@ import jakarta.persistence.JoinColumn;
 public class Oferta {
 	@ManyToOne
 	@JoinColumn(name = "idEmpresa")
-	private Empresa empresa;
+	private Empresa empresa; //clave foranea
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idOferta; //PDF
