@@ -17,21 +17,26 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.model.Empresa;
 import com.example.demo.repository.EmpresaRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @RestController
-@RequestMapping("")
 public class EmpresaControladorRPC {
+	
+	
 	@Autowired
 	private final EmpresaRepository repository;
 	
+	
 	public EmpresaControladorRPC (EmpresaRepository repository) {
-		this.repository = repository;
-		
+		this.repository = repository;	
 	}
+	
 	
 	@GetMapping("/rpc/empresas")
 	public ResponseEntity<List<Empresa>> readEmpresas() {
-		List<Empresa> empresas = repository.findAll();
-		return ResponseEntity.ok(empresas);
+		//return repository.findAll()
+		return ResponseEntity.ok(repository.findAll());
+		
 	}
 	
 	
@@ -39,12 +44,9 @@ public class EmpresaControladorRPC {
 	
 	@GetMapping("/rpc/empresas/{id}")
 	public ResponseEntity<Empresa> readEmpresa(@PathVariable int id) {
-		Optional<Empresa> empresaBuscada = repository.findById(id);
-		
-		if (empresaBuscada.isPresent())
-			return ResponseEntity.ok(empresaBuscada.get());
-		else
-			return ResponseEntity.noContent().build();
+		//return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Empresa no encontrada con ID: " + id));
+		return repository.findById(id).map( empresa -> { return ResponseEntity.ok(repository.save(empresa)); } )
+									  .orElse(ResponseEntity.noContent().build());
 	}
 	
 	
@@ -52,8 +54,8 @@ public class EmpresaControladorRPC {
 	
 	@PostMapping("/rpc/empresas")
 	public ResponseEntity<Empresa> createEmpresa(@RequestBody Empresa empresa) {
-		Empresa empresaNueva = repository.save(empresa);
-		return ResponseEntity.ok(empresaNueva);
+		//return repository.save(empresa);
+		return ResponseEntity.ok(repository.save(empresa));
 	}
 	
 	
@@ -61,29 +63,30 @@ public class EmpresaControladorRPC {
 	
 	@PutMapping("/rpc/empresas/{id}")
 	public ResponseEntity<Empresa> updateEmpresa(@PathVariable int id, @RequestBody Empresa empresa) {
-		Optional<Empresa> empresaBuscada = repository.findById(id);
-		if (empresaBuscada.isPresent()) {
-			Empresa empresaCambiada = empresaBuscada.get();
-			empresaCambiada.setNombre(empresa.getNombre());
-			empresaCambiada.setSector(empresa.getSector());
-			empresaCambiada.setTamaño(empresa.getTamaño());
-			empresaCambiada.setTipo(empresa.getTipo());
-			empresaCambiada.setUbicacion(empresa.getUbicacion());
-			repository.save(empresaCambiada);
-			return ResponseEntity.ok(empresaCambiada);
-		}
-		else {
-			return ResponseEntity.noContent().build();
-		}
+		return repository.findById(id)
+				.map(empresaCambiada -> {
+			    	empresaCambiada.setNombre(empresa.getNombre());
+					empresaCambiada.setSector(empresa.getSector());
+					empresaCambiada.setTamaño(empresa.getTamaño());
+					empresaCambiada.setTipo(empresa.getTipo());
+					empresaCambiada.setUbicacion(empresa.getUbicacion());
+					//return repository.save(empresaCambiada);
+					return ResponseEntity.ok(repository.save(empresaCambiada));
+	    		})
+			    .orElseGet( () -> {
+			        empresa.setIdEmpresa(id);
+			        repository.save(empresa);
+			      //return repository.save(empresa);
+			        return ResponseEntity.ok(empresa);
+		    	});
 	}
 	
 	
 	
 	
 	@DeleteMapping("/rpc/empresas/{id}")
-	public ResponseEntity<Void> deleteEmpresa(@PathVariable int id) {
+	void deleteEmpresa(@PathVariable int id) {
 		repository.deleteById(id);
-		return ResponseEntity.ok(null);
 	}
 	
 }
