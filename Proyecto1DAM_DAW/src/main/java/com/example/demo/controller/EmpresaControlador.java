@@ -18,7 +18,7 @@ import com.example.demo.model.Empresa;
 import com.example.demo.repository.EmpresaRepository;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("")
 public class EmpresaControlador {
 	@Autowired
 	private final EmpresaRepository repository;
@@ -28,7 +28,7 @@ public class EmpresaControlador {
 		
 	}
 	
-	@GetMapping("/empresas")
+	@GetMapping("/api/empresas")
 	public ResponseEntity<List<Empresa>> readEmpresas() {
 		List<Empresa> empresas = repository.findAll();
 		return ResponseEntity.ok(empresas);
@@ -37,7 +37,7 @@ public class EmpresaControlador {
 	
 	
 	
-	@GetMapping("/empresas/{id}")
+	@GetMapping("/api/empresas/{id}")
 	public ResponseEntity<Empresa> readEmpresa(@PathVariable int id) {
 		Optional<Empresa> empresaBuscada = repository.findById(id);
 		
@@ -50,7 +50,7 @@ public class EmpresaControlador {
 	
 	
 	
-	@PostMapping("/empresas")
+	@PostMapping("/api/empresas")
 	public ResponseEntity<Empresa> createEmpresa(@RequestBody Empresa empresa) {
 		Empresa empresaNueva = repository.save(empresa);
 		return ResponseEntity.ok(empresaNueva);
@@ -59,12 +59,11 @@ public class EmpresaControlador {
 	
 	
 	
-	@PutMapping("empresas/{id}")
-	public ResponseEntity<Empresa> updateEmpresa(@PathVariable int id, Empresa empresa) {
+	@PutMapping("/api/empresas/{id}")
+	public ResponseEntity<Empresa> updateEmpresa(@PathVariable int id, @RequestBody Empresa empresa) {
 		Optional<Empresa> empresaBuscada = repository.findById(id);
 		if (empresaBuscada.isPresent()) {
 			Empresa empresaCambiada = empresaBuscada.get();
-			
 			empresaCambiada.setNombre(empresa.getNombre());
 			empresaCambiada.setSector(empresa.getSector());
 			empresaCambiada.setTamaño(empresa.getTamaño());
@@ -81,7 +80,7 @@ public class EmpresaControlador {
 	
 	
 	
-	@DeleteMapping("/empresas/{id}")
+	@DeleteMapping("/api/empresas/{id}")
 	public ResponseEntity<Void> deleteEmpresa(@PathVariable int id) {
 		repository.deleteById(id);
 		return ResponseEntity.ok(null);
