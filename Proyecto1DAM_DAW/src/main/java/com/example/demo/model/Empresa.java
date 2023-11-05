@@ -91,10 +91,16 @@ public int getIdEmpresa() {
 	@Override
 	public int hashCode() {
 			return Objects.hash(this.idEmpresa, this.nombre, this.tipo, this.sector, this.tamaño, this.ubicacion);
-	}	
+	}
+
 
 	@Override
 	public String toString() {
-			return "String";
-	}
+		return "Empresa [idEmpresa=" + idEmpresa + ", nombre=" + nombre + ", sector=" + sector + ", tamaño=" + tamaño
+				+ ", tipo=" + tipo + ", ubicacion=" + ubicacion + ", getIdEmpresa()=" + getIdEmpresa()
+				+ ", getNombre()=" + getNombre() + ", getTipo()=" + getTipo() + ", getSector()=" + getSector()
+				+ ", getTamaño()=" + getTamaño() + ", getUbicacion()=" + getUbicacion() + ", hashCode()=" + hashCode()
+				+ ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
+	}	
+
 }
