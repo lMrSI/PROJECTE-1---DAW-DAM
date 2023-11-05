@@ -19,16 +19,16 @@ import com.example.demo.repository.EmpresaRepository;
 
 @RestController
 @RequestMapping("")
-public class EmpresaControlador {
+public class EmpresaControladorRPC {
 	@Autowired
 	private final EmpresaRepository repository;
 	
-	public EmpresaControlador (EmpresaRepository repository) {
+	public EmpresaControladorRPC (EmpresaRepository repository) {
 		this.repository = repository;
 		
 	}
 	
-	@GetMapping("/api/empresas")
+	@GetMapping("/rpc/empresas")
 	public ResponseEntity<List<Empresa>> readEmpresas() {
 		List<Empresa> empresas = repository.findAll();
 		return ResponseEntity.ok(empresas);
@@ -37,7 +37,7 @@ public class EmpresaControlador {
 	
 	
 	
-	@GetMapping("/api/empresas/{id}")
+	@GetMapping("/rpc/empresas/{id}")
 	public ResponseEntity<Empresa> readEmpresa(@PathVariable int id) {
 		Optional<Empresa> empresaBuscada = repository.findById(id);
 		
@@ -50,7 +50,7 @@ public class EmpresaControlador {
 	
 	
 	
-	@PostMapping("/api/empresas")
+	@PostMapping("/rpc/empresas")
 	public ResponseEntity<Empresa> createEmpresa(@RequestBody Empresa empresa) {
 		Empresa empresaNueva = repository.save(empresa);
 		return ResponseEntity.ok(empresaNueva);
@@ -59,7 +59,7 @@ public class EmpresaControlador {
 	
 	
 	
-	@PutMapping("/api/empresas/{id}")
+	@PutMapping("/rpc/empresas/{id}")
 	public ResponseEntity<Empresa> updateEmpresa(@PathVariable int id, @RequestBody Empresa empresa) {
 		Optional<Empresa> empresaBuscada = repository.findById(id);
 		if (empresaBuscada.isPresent()) {
@@ -80,7 +80,7 @@ public class EmpresaControlador {
 	
 	
 	
-	@DeleteMapping("/api/empresas/{id}")
+	@DeleteMapping("/rpc/empresas/{id}")
 	public ResponseEntity<Void> deleteEmpresa(@PathVariable int id) {
 		repository.deleteById(id);
 		return ResponseEntity.ok(null);
