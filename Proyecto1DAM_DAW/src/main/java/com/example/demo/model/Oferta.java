@@ -1,6 +1,9 @@
 package com.example.demo.model;
 import java.util.Objects;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 public class Oferta {
 	@ManyToOne
 	@JoinColumn(name = "idEmpresa")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Empresa empresa; //clave foranea
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
