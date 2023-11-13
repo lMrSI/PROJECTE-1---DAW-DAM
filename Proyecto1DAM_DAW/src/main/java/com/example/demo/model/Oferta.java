@@ -5,7 +5,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +20,7 @@ public class Oferta {
 	@ManyToOne
 	@JoinColumn(name = "idEmpresa")
 	@OnDelete(action = OnDeleteAction.CASCADE)
+
 	@JsonIgnore //para que funcione getOfertas de Empresa
 	private Empresa empresa; //clave foranea
 	@Id
@@ -30,7 +30,9 @@ public class Oferta {
 	private String funciones;
 	private String tipoContrato;
 	private String titulo;
+
 	//private String ubicacion;
+
 
 
 
@@ -87,7 +89,9 @@ public class Oferta {
 
 	@Override
 	public int hashCode() {
+
 		return Objects.hash(descripcion, empresa, funciones, idOferta, tipoContrato, titulo);
+
 	}
 
 	@Override

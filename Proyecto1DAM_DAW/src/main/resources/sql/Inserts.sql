@@ -10,3 +10,4 @@ VALUES
 	(1, 'Programacion de apps con Kotlin', 'Soporte', 'DUAL', 'Programador Movil'),
 	(2, 'Programacion de apps con node', 'Soporte', 'FCT', 'Programador Web'),
 	(2, 'Programacion de apps con node', 'Soporte', 'DUAL', 'Programador Web');
+
