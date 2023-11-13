@@ -21,7 +21,7 @@ public class Oferta {
 	@ManyToOne
 	@JoinColumn(name = "idEmpresa")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	//@JsonIgnore //para que funcione getOfertas de Empresa
+	@JsonIgnore //para que funcione getOfertas de Empresa
 	private Empresa empresa; //clave foranea
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
