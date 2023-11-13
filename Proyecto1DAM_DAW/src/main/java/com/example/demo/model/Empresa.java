@@ -1,11 +1,20 @@
 package com.example.demo.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import jakarta.persistence.CascadeType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import jakarta.persistence.OneToMany;
 
 import jakarta.persistence.Table;
 
@@ -17,6 +26,11 @@ public class Empresa {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idEmpresa;
 	private String nombre;
+	@OneToMany(mappedBy="empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore //Para que funciones GET ofertas
+	//@JsonSerialize(as = ArrayList.class) //manifiesta que la Lista sera de tipo ArrayList
+	private List<Oferta> ofertas;
+
 	private String sector;
 	private String tamaño;
 	private String tipo;
@@ -73,6 +87,14 @@ public int getIdEmpresa() {
 		this.ubicacion = ubicacion;
 	}
 
+	public List<Oferta> getOfertas() {
+		return ofertas;
+	}
+
+
+	public void setOfertas(List<Oferta> ofertas) {
+		this.ofertas = ofertas;
+	}
 
 
 	@Override
@@ -85,22 +107,20 @@ public int getIdEmpresa() {
 		Empresa empresa = (Empresa) o;
 		return Objects.equals(this.idEmpresa, empresa.idEmpresa) && Objects.equals(this.nombre, empresa.nombre)
 			   && Objects.equals(this.tipo, empresa.tipo) && Objects.equals(this.sector, empresa.sector)
-			   && Objects.equals(this.tamaño, empresa.tamaño) && Objects.equals(this.ubicacion, empresa.ubicacion);
+			   && Objects.equals(this.tamaño, empresa.tamaño) && Objects.equals(this.ubicacion, empresa.ubicacion)
+			   && Objects.equals(this.ofertas, empresa.ofertas);
   }
 
 	@Override
 	public int hashCode() {
-			return Objects.hash(this.idEmpresa, this.nombre, this.tipo, this.sector, this.tamaño, this.ubicacion);
+			return Objects.hash(this.idEmpresa, this.nombre, this.ofertas, this.tipo, this.sector, this.tamaño, this.ubicacion);
 	}
 
-
+	
 	@Override
 	public String toString() {
-		return "Empresa [idEmpresa=" + idEmpresa + ", nombre=" + nombre + ", sector=" + sector + ", tamaño=" + tamaño
-				+ ", tipo=" + tipo + ", ubicacion=" + ubicacion + ", getIdEmpresa()=" + getIdEmpresa()
-				+ ", getNombre()=" + getNombre() + ", getTipo()=" + getTipo() + ", getSector()=" + getSector()
-				+ ", getTamaño()=" + getTamaño() + ", getUbicacion()=" + getUbicacion() + ", hashCode()=" + hashCode()
-				+ ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
+		return "Empresa [idEmpresa=" + idEmpresa + ", nombre=" + nombre + ", ofertas=" + ofertas + ", sector=" + sector
+				+ ", tamaño=" + tamaño + ", tipo=" + tipo + ", ubicacion=" + ubicacion + "]";
 	}	
 
 }

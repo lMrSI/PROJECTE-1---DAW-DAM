@@ -4,6 +4,7 @@ import java.util.Objects;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,15 +20,19 @@ public class Oferta {
 	@ManyToOne
 	@JoinColumn(name = "idEmpresa")
 	@OnDelete(action = OnDeleteAction.CASCADE)
+
+	@JsonIgnore //para que funcione getOfertas de Empresa
 	private Empresa empresa; //clave foranea
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int idOferta; //PDF
+	private int idOferta;
 	private String descripcion;
 	private String funciones;
 	private String tipoContrato;
 	private String titulo;
-	private String ubicacion;
+
+	//private String ubicacion;
+
 
 
 
@@ -57,13 +62,6 @@ public class Oferta {
 		this.descripcion = descripcion;
 	}
 
-	public String getUbicacion() {
-		return ubicacion;
-	}
-
-	public void setUbicacion(String ubicacion) {
-		this.ubicacion = ubicacion;
-	}
 
 	public String getFunciones() {
 		return funciones;
@@ -91,7 +89,9 @@ public class Oferta {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(descripcion, empresa, funciones, idOferta, tipoContrato, titulo, ubicacion);
+
+		return Objects.hash(descripcion, empresa, funciones, idOferta, tipoContrato, titulo);
+
 	}
 
 	@Override
@@ -105,8 +105,7 @@ public class Oferta {
 		Oferta other = (Oferta) o;
 		return Objects.equals(descripcion, other.descripcion) && Objects.equals(empresa, other.empresa)
 				&& Objects.equals(funciones, other.funciones) && idOferta == other.idOferta
-				&& Objects.equals(tipoContrato, other.tipoContrato) && Objects.equals(titulo, other.titulo)
-				&& Objects.equals(ubicacion, other.ubicacion);
+				&& Objects.equals(tipoContrato, other.tipoContrato) && Objects.equals(titulo, other.titulo);
 	}
 
 	@Override
