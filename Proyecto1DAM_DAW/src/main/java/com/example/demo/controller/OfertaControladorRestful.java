@@ -62,9 +62,6 @@ public class OfertaControladorRestful {
 				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(OfertaControladorRestful.class).readOfertas()).withSelfRel());
 	}
 	
-	
-	
-	
 	@GetMapping("/apirestful/ofertas")	
 	public CollectionModel<EntityModel<Oferta>> readOfertas() {
 		List<EntityModel<Oferta>> ofertas = repositoryOferta.findAll().stream()
@@ -74,19 +71,12 @@ public class OfertaControladorRestful {
 				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(OfertaControladorRestful.class).readOfertas()).withSelfRel());
 	}
 	
-		
-	
-	
-	
 	@GetMapping("/apirestful/ofertas/{id}")
 	public EntityModel<Oferta> readOferta(@PathVariable int id) {
 		Oferta oferta = repositoryOferta.findById(id)
 				.orElseThrow(() -> new OfertaNotFoundException(id));
 		return assembler.toModel(oferta);
 	}
-	
-	
-	
 	
 	@PostMapping("/apirestful/ofertas")
 	public ResponseEntity<?> createOferta(@RequestBody Oferta oferta) {
@@ -95,9 +85,6 @@ public class OfertaControladorRestful {
 				.created(ofertaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
 				.body(ofertaEntityModel);
 	}
-	
-	
-	
 	
 	@PutMapping("/apirestful/ofertas/{id}")
 	public ResponseEntity<?> updateOferta(@PathVariable int id, @RequestBody Oferta oferta) {
@@ -123,13 +110,9 @@ public class OfertaControladorRestful {
 		      .body(OfertaEntityModel);
 	}
 	
-	
-	
-	
 	@DeleteMapping("/apirestful/ofertas/{id}")
 	ResponseEntity<?> deleteEmpresa(@PathVariable int id) {
 		repositoryOferta.deleteById(id);
 		return ResponseEntity.noContent().build();
-	}
-
+	} 
 }

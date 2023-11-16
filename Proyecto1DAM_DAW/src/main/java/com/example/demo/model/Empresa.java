@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.CascadeType;
@@ -27,7 +28,7 @@ public class Empresa {
 	private int idEmpresa;
 	private String nombre;
 	@OneToMany(mappedBy="empresa", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore //Para que funciones GET ofertas
+	@JsonIgnoreProperties("empresa") //Para que funciones GET ofertas
 	//@JsonSerialize(as = ArrayList.class) //manifiesta que la Lista sera de tipo ArrayList
 	private List<Oferta> ofertas;
 
