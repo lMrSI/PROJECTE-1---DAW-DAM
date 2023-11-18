@@ -22,11 +22,13 @@ public class Oferta {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idEmpresa")
 	@OnDelete(action = OnDeleteAction.CASCADE)
+
 	
 	//IGNORA EMPRESA DE LAS OFERTAS y evita bucle --> NO MUESTRA EMPRESA
 	@JsonIgnore
 	//IGNORA ATRIBUTO OFERTA DE LAS EMPRESAS y evita bucle --> MANEJA EMPRESAS SIN OFERTAS(tambien con idEmpresa)
 	//@JsonIgnoreProperties("ofertas")
+
 	private Empresa empresa; //clave foranea
 	
 	@Id

@@ -28,6 +28,7 @@ public class Empresa {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idEmpresa;
 	private String nombre;
+
 	private String sector;
 	private String tamaño;
 	private String tipo;
