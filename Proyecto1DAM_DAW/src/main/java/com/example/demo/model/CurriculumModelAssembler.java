@@ -19,16 +19,16 @@ public class CurriculumModelAssembler implements RepresentationModelAssembler<Cu
 				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CurriculumControladorRestful.class).readCurriculum(curriculum.getIdCurriculum())).withSelfRel(),
 				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CurriculumControladorRestful.class).readCurriculums()).withRel("curriculums"));
 		
-		if (curriculum.getStatus() == Status.SUBIENDO_CV) {
+		if (curriculum.getStatus() == Status.CV_SUBIDO) {
 			curriculumEntityModel.add(WebMvcLinkBuilder.linkTo(
 					WebMvcLinkBuilder.methodOn(CurriculumControladorRestful.class)
 					.validarCurriculum(curriculum.getIdCurriculum()))
-					.withRel("validar CV"));
+					.withRel("cv validado"));
 			
 			curriculumEntityModel.add(WebMvcLinkBuilder.linkTo(
 					WebMvcLinkBuilder.methodOn(CurriculumControladorRestful.class)
 					.invalidarCurriculum(curriculum.getIdCurriculum()))
-					.withRel("invalidar CV"));
+					.withRel("cv invalidado"));
 		}
 
 		return curriculumEntityModel;

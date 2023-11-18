@@ -85,6 +85,19 @@ public class OfertaControladorRestful {
 				.created(ofertaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
 				.body(ofertaEntityModel);
 	}
+
+	@PostMapping("/apirestful/empresas/{idEmpresa}/ofertas")
+	public ResponseEntity<?> createOfertaWithIdEmpresa(@RequestBody Oferta oferta, @PathVariable int idEmpresa) {
+		oferta.setEmpresa(new Empresa());
+		oferta.getEmpresa().setIdEmpresa(idEmpresa);
+		//SetOfertaByIdEmpresa()
+		EntityModel<Oferta> ofertaEntityModel = assembler.toModel(repositoryOferta.save(oferta));
+		return ResponseEntity
+				.created(ofertaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+				.body(ofertaEntityModel);
+	}
+	
+	
 	
 	@PutMapping("/apirestful/ofertas/{id}")
 	public ResponseEntity<?> updateOferta(@PathVariable int id, @RequestBody Oferta oferta) {

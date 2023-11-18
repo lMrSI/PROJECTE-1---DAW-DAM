@@ -10,4 +10,5 @@ import com.example.demo.model.Oferta;
 
 public interface OfertaRepository extends JpaRepository<Oferta, Integer> {
 	List<Oferta> findByEmpresa(Empresa empresa);
+	List<Oferta> findByEmpresaIsNull();
 }

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.CascadeType;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,16 +28,19 @@ public class Empresa {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idEmpresa;
 	private String nombre;
-	@OneToMany(mappedBy="empresa", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties("empresa") //Para que funciones GET ofertas
-	//@JsonSerialize(as = ArrayList.class) //manifiesta que la Lista sera de tipo ArrayList
-	private List<Oferta> ofertas;
 
 	private String sector;
 	private String tamaño;
 	private String tipo;
 	private String ubicacion;
-
+	
+	@OneToMany(mappedBy="empresa", cascade = CascadeType.ALL, orphanRemoval = true) //PERSIST , MERGE , REMOVE , REFRESH , DETACH | targetEntity=Empresa
+	//IGNORA OFERTAS DE LA EMPRESA y evita bucle --> NO MANEJA OFERTAS
+	//@JsonIgnore
+	//IGNORA ATRIBUTO EMPRESA DE LAS OFERTAS y evita bucle --> MANEJA OFERTAS SIN EMPRESA
+	@JsonIgnoreProperties("empresa")
+	//@JsonSerialize(as = ArrayList.class)
+	private List<Oferta> ofertas;
 	public Empresa() {}
 
 

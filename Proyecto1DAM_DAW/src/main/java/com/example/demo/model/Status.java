@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
 public enum Status {
-	SUBIENDO_CV,
-	VALIDAR_CV,
-	INVALIDAR_CV
+	CV_SUBIDO,
+	CV_VALIDADO,
+	CV_INVALIDADO
 	}

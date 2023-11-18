@@ -15,16 +15,22 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-
+import jakarta.persistence.FetchType;
 @Entity
 @Table(name="ofertas")
 public class Oferta {
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idEmpresa")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 
-	@JsonIgnoreProperties("ofertas") //para que funcione getOfertas de Empresa
+	
+	//IGNORA EMPRESA DE LAS OFERTAS y evita bucle --> NO MUESTRA EMPRESA
+	@JsonIgnore
+	//IGNORA ATRIBUTO OFERTA DE LAS EMPRESAS y evita bucle --> MANEJA EMPRESAS SIN OFERTAS(tambien con idEmpresa)
+	//@JsonIgnoreProperties("ofertas")
+
 	private Empresa empresa; //clave foranea
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idOferta;
