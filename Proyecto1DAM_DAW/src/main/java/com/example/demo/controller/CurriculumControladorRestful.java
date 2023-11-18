@@ -71,7 +71,7 @@ public class CurriculumControladorRestful {
 	
 	@PostMapping("/apirestful/curriculums")
 	public ResponseEntity<EntityModel<Curriculum>> createCurriculum(@RequestBody Curriculum curriculum) {
-		curriculum.setStatus(Status.SUBIENDO_CV);
+		curriculum.setStatus(Status.CV_SUBIDO);
 		Curriculum nuevoCurriculum = repository.save(curriculum);
 		return ResponseEntity.created(
 						WebMvcLinkBuilder.linkTo(
@@ -96,8 +96,8 @@ public class CurriculumControladorRestful {
 				repository.findById(id)
 			    .orElseThrow(() -> new CurriculumNotFoundException(id));
 		
-		if (curriculumActualizado.getStatus() == Status.SUBIENDO_CV) {
-			curriculumActualizado.setStatus(Status.VALIDAR_CV);
+		if (curriculumActualizado.getStatus() == Status.CV_SUBIDO) {
+			curriculumActualizado.setStatus(Status.CV_VALIDADO);
 		}
 		return ResponseEntity.ok(assembler.toModel(repository.save(curriculumActualizado)));
 	}
@@ -111,8 +111,8 @@ public class CurriculumControladorRestful {
 				repository.findById(id)
 			    .orElseThrow(() -> new CurriculumNotFoundException(id));
 		
-		if (curriculumActualizado.getStatus() == Status.SUBIENDO_CV) {
-			curriculumActualizado.setStatus(Status.INVALIDAR_CV);
+		if (curriculumActualizado.getStatus() == Status.CV_SUBIDO) {
+			curriculumActualizado.setStatus(Status.CV_INVALIDADO);
 			return ResponseEntity.ok(assembler.toModel(repository.save(curriculumActualizado)));
 		}
 		
@@ -121,7 +121,7 @@ public class CurriculumControladorRestful {
 		.header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
 		.body(Problem.create()
 		.withTitle("Imposible invalidar")
-		.withDetail("El CV ya ha sido esta en el tiene este estado asignado: " + curriculumActualizado.getStatus()));
+		.withDetail("El CV esta en estado: " + curriculumActualizado.getStatus()));
 	}
 }
 

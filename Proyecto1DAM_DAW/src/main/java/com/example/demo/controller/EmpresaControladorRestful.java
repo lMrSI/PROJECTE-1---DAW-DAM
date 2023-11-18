@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.exception.EmpresaNotFoundException;
 import com.example.demo.model.Empresa;
 import com.example.demo.model.EmpresaModelAssembler;
+import com.example.demo.model.Oferta;
 import com.example.demo.repository.EmpresaRepository;
+import com.example.demo.repository.OfertaRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -33,11 +35,15 @@ public class EmpresaControladorRestful {
 	@Autowired
 	private final EmpresaRepository repository;
 	
+	@Autowired
+	private final OfertaRepository repositoryOferta;
+	
 	private final EmpresaModelAssembler assembler;
 	
-	public EmpresaControladorRestful(EmpresaRepository repository, EmpresaModelAssembler assembler) {
+	public EmpresaControladorRestful(EmpresaRepository repository, OfertaRepository repositoryOferta, EmpresaModelAssembler assembler) {
 		this.repository = repository;
 		this.assembler = assembler;
+		this.repositoryOferta = repositoryOferta;
 	}
 	
 	
@@ -71,6 +77,22 @@ public class EmpresaControladorRestful {
 				.created(empresaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
 				.body(empresaEntityModel);
 	}
+	
+	@PostMapping("/apirestful/empresas/ofertas")
+	public ResponseEntity<?> createEmpresaAndOfertas(@RequestBody Empresa empresa) {
+		repository.save(empresa);
+		Empresa ultimaEmpresa = repository.findTopByOrderByIdEmpresaDesc();
+		List<Oferta> ultimasOfertas = repositoryOferta.findByEmpresaIsNull();
+		for (Oferta oferta : ultimasOfertas) {
+            oferta.setEmpresa(ultimaEmpresa);
+		}
+        repositoryOferta.saveAll(ultimasOfertas);
+            
+        
+        EntityModel<Empresa> empresaEntityModel = assembler.toModel(ultimaEmpresa);
+		return ResponseEntity.created(empresaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(empresaEntityModel);
+	}
+	
 	
 	
 	
