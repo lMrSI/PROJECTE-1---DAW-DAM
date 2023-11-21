@@ -35,3 +35,5 @@ build/
 
 ### Eclipse ###
 pom.properties
+target/classes/META-INF/maven/com.example/Proyecto1DAM_DAW/pom.properties
+target/classes/application.properties
