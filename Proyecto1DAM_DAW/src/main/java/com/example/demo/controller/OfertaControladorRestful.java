@@ -58,7 +58,9 @@ public class OfertaControladorRestful {
 				.findByEmpresa(repositoryEmpresa.findById(idEmpresa).get())
 				.stream().map(assembler::toModel)
 				.collect(Collectors.toList());
-		return CollectionModel.of(ofertas, 
+		//.findByIdEmpresa(idEmpresa);
+
+		return CollectionModel.of(ofertas,
 				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(OfertaControladorRestful.class).readOfertas()).withSelfRel());
 	}
 	
