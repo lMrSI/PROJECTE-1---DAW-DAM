@@ -43,8 +43,16 @@ public class Empresa {
 	private List<Oferta> ofertas;
 	public Empresa() {}
 
+	public Empresa(String nombre, String sector, String tamaño, String tipo, String ubicacion, List<Oferta> ofertas) {
+		this.nombre = nombre;
+		this.sector = sector;
+		this.tamaño = tamaño;
+		this.tipo = tipo;
+		this.ubicacion = ubicacion;
+		this.ofertas = ofertas;
+	}
 
-public int getIdEmpresa() {
+	public int getIdEmpresa() {
 		return idEmpresa;
 	}
 

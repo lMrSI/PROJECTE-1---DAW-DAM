@@ -25,9 +25,9 @@ public class Oferta {
 
 	
 	//IGNORA EMPRESA DE LAS OFERTAS y evita bucle --> NO MUESTRA EMPRESA
-	@JsonIgnore
+	//@JsonIgnore
 	//IGNORA ATRIBUTO OFERTA DE LAS EMPRESAS y evita bucle --> MANEJA EMPRESAS SIN OFERTAS(tambien con idEmpresa)
-	//@JsonIgnoreProperties("ofertas")
+	@JsonIgnoreProperties("ofertas")
 
 	private Empresa empresa; //clave foranea
 	
