@@ -19,11 +19,11 @@ import com.example.demo.repository.EmpresaRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
-@RestController
+//@RestController
 public class EmpresaControladorRPC {
 	
 	
-	@Autowired
+	//@Autowired
 	private final EmpresaRepository repository;
 	
 	
