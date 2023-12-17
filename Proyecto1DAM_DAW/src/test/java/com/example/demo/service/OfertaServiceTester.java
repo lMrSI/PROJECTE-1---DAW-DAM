@@ -11,12 +11,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import com.example.demo.controller.OfertaControladorRestful;
 
 //@ExtendWith() //MODO 2
 class OfertaServiceTester {
@@ -77,5 +78,14 @@ class OfertaServiceTester {
 
         // Verificar que el método del repositorio fue llamado
         Mockito.verify(repositoryOferta, Mockito.times(1)).findById(idOfertaExistente);
+    }
+
+    @Test
+    void testCreateOferta() {
+
+    }
+    @Test
+    void findDelete(){
+        int idOfertaExistente = 1;
     }
 }
