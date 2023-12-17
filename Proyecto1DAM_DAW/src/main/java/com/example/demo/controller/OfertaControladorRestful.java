@@ -82,7 +82,8 @@ public class OfertaControladorRestful {
 	
 	@PostMapping("/apirestful/ofertas")
 	public ResponseEntity<?> createOferta(@RequestBody Oferta oferta) {
-		EntityModel<Oferta> ofertaEntityModel = assembler.toModel(repositoryOferta.save(oferta));
+		Oferta savedOferta = repositoryOferta.save(oferta);
+		EntityModel<Oferta> ofertaEntityModel = assembler.toModel(savedOferta);
 		return ResponseEntity
 				.created(ofertaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
 				.body(ofertaEntityModel);
