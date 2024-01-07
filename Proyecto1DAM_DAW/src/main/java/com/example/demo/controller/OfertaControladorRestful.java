@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -35,6 +36,7 @@ import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("")
+@Tag(name="Ofertas", description="APIRESTful de ofertas con operaciones CRUD")
 public class OfertaControladorRestful {
 	
 	

@@ -1,6 +1,7 @@
 package com.example.demo.model;
 import java.util.Objects;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -19,6 +20,7 @@ import jakarta.persistence.FetchType;
 @Entity
 @Table(name="ofertas")
 public class Oferta {
+	@Schema(example = "1", description = "Datos de la empresa a la que pertence")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idEmpresa")
 	@OnDelete(action = OnDeleteAction.CASCADE)
@@ -28,18 +30,24 @@ public class Oferta {
 	//@JsonIgnore
 	//IGNORA ATRIBUTO OFERTA DE LAS EMPRESAS y evita bucle --> MANEJA EMPRESAS SIN OFERTAS(tambien con idEmpresa)
 	@JsonIgnoreProperties("ofertas")
-
 	private Empresa empresa; //clave foranea
-	
+
+	@Schema(example = "1", description = "Identificador de la oferta")
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idOferta;
-	private String descripcion;
-	private String funciones;
-	private String tipoContrato;
-	private String titulo;
 
-	//private String ubicacion;
+	@Schema(example = "Esta es la descripcion de las condiciones de la oferta",
+			description = "Explicacion e introduccion de la oferta")
+	private String descripcion;
+	@Schema(example = "Mantenimiento de red, de web, ...",
+			description = "Indica una lista de principales tareas del cargo")
+	private String funciones;
+
+	@Schema(example = "DUAL", description = "Indica el tipo de convenio de las practicas: FCT o DUAL")
+	private String tipoContrato;
+	@Schema(example = "Tecnico informatico", description = "Indica un perfil del cargo de la oferta")
+	private String titulo;
 
 
 

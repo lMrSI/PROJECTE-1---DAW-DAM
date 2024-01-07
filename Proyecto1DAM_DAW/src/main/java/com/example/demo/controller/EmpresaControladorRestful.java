@@ -3,6 +3,13 @@ package com.example.demo.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -29,6 +36,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("")
+@Tag(name="Empresas", description="APIRESTful de empresas con operaciones CRUD")
 public class EmpresaControladorRestful {
 	
 	
@@ -45,8 +53,23 @@ public class EmpresaControladorRestful {
 		this.assembler = assembler;
 		this.repositoryOferta = repositoryOferta;
 	}
-	
-	
+
+	@Operation(summary = "read empresas", description = "Busca y devuelve todas las empresas")
+	@ApiResponses(
+			value = {
+				@ApiResponse(
+					responseCode = "200",
+					description = "Ha devuelto con exito una lista de empresas",
+					content = {
+						@Content(
+							mediaType = "application/json",
+							array = @ArraySchema(schema = @Schema(implementation = Empresa.class) )
+						)
+					}
+
+				)
+		    }
+	)
 	@GetMapping("/apirestful/empresas")	
 	public CollectionModel<EntityModel<Empresa>> readEmpresas() {
 		List<EntityModel<Empresa>> empresas = repository.findAll().stream()
