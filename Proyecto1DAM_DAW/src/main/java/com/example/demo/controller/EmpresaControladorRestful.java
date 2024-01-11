@@ -9,6 +9,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,7 @@ public class EmpresaControladorRestful {
 		List<EntityModel<Empresa>> empresas = repository.findAll().stream()
 			  .map(assembler::toModel)
 			  .collect(Collectors.toList());
+		SecurityContextHolder.getContext().getAuthentication();
 		return CollectionModel.of(empresas, 
 				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmpresaControladorRestful.class).readEmpresas()).withSelfRel());
 	}
@@ -64,6 +66,7 @@ public class EmpresaControladorRestful {
 	public EntityModel<Empresa> readEmpresa(@PathVariable int id) {
 		Empresa empresa = repository.findById(id)
 				.orElseThrow(() -> new EmpresaNotFoundException(id));
+		SecurityContextHolder.getContext().getAuthentication();
 		return assembler.toModel(empresa);
 	}
 	
@@ -73,6 +76,7 @@ public class EmpresaControladorRestful {
 	@PostMapping("/apirestful/empresas")
 	public ResponseEntity<?> createEmpresa(@RequestBody Empresa empresa) {
 		EntityModel<Empresa> empresaEntityModel = assembler.toModel(repository.save(empresa));
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity
 				.created(empresaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
 				.body(empresaEntityModel);
@@ -90,6 +94,7 @@ public class EmpresaControladorRestful {
             
         
         EntityModel<Empresa> empresaEntityModel = assembler.toModel(ultimaEmpresa);
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity.created(empresaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(empresaEntityModel);
 	}
 	
@@ -115,10 +120,10 @@ public class EmpresaControladorRestful {
 		    	});
 		
 		EntityModel<Empresa> EmpresaEntityModel = assembler.toModel(empresaActualizada);
-
-		  return ResponseEntity
-		      .created(EmpresaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-		      .body(EmpresaEntityModel);
+		SecurityContextHolder.getContext().getAuthentication();
+		return ResponseEntity
+				.created(EmpresaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+		      	.body(EmpresaEntityModel);
 	}
 	
 	
@@ -127,6 +132,7 @@ public class EmpresaControladorRestful {
 	@DeleteMapping("/apirestful/empresas/{id}")
 	ResponseEntity<?> deleteEmpresa(@PathVariable int id) {
 		repository.deleteById(id);
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity.noContent().build();
 	}
 	
