@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ public class EmpresaControladorRPC {
 	@GetMapping("/rpc/empresas")
 	public ResponseEntity<List<Empresa>> readEmpresas() {
 		//return repository.findAll()
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity.ok(repository.findAll());
 		
 	}
@@ -45,6 +47,7 @@ public class EmpresaControladorRPC {
 	@GetMapping("/rpc/empresas/{id}")
 	public ResponseEntity<Empresa> readEmpresa(@PathVariable int id) {
 		//return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Empresa no encontrada con ID: " + id));
+		SecurityContextHolder.getContext().getAuthentication();
 		return repository.findById(id).map( empresa -> { return ResponseEntity.ok(repository.save(empresa)); } )
 									  .orElse(ResponseEntity.noContent().build());
 	}
@@ -55,6 +58,7 @@ public class EmpresaControladorRPC {
 	@PostMapping("/rpc/empresas")
 	public ResponseEntity<Empresa> createEmpresa(@RequestBody Empresa empresa) {
 		//return repository.save(empresa);
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity.ok(repository.save(empresa));
 	}
 	
@@ -71,12 +75,14 @@ public class EmpresaControladorRPC {
 					empresaCambiada.setTipo(empresa.getTipo());
 					empresaCambiada.setUbicacion(empresa.getUbicacion());
 					//return repository.save(empresaCambiada);
+					SecurityContextHolder.getContext().getAuthentication();
 					return ResponseEntity.ok(repository.save(empresaCambiada));
 	    		})
 			    .orElseGet( () -> {
 			        empresa.setIdEmpresa(id);
 			        repository.save(empresa);
 			      //return repository.save(empresa);
+					SecurityContextHolder.getContext().getAuthentication();
 			        return ResponseEntity.ok(empresa);
 		    	});
 	}

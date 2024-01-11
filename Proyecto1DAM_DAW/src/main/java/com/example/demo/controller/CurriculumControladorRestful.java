@@ -13,6 +13,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +52,7 @@ public class CurriculumControladorRestful {
 		List<EntityModel<Curriculum>> curriculums = repository.findAll().stream()
 			  .map(assembler::toModel)
 			  .collect(Collectors.toList());
+		SecurityContextHolder.getContext().getAuthentication();
 		return CollectionModel.of(curriculums, 
 				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CurriculumControladorRestful.class).readCurriculums()).withSelfRel());
 	}
@@ -63,6 +65,7 @@ public class CurriculumControladorRestful {
 	public EntityModel<Curriculum> readCurriculum(@PathVariable int id) {
 		Curriculum curriculum = repository.findById(id)
 				.orElseThrow(() -> new CurriculumNotFoundException(id));
+		SecurityContextHolder.getContext().getAuthentication();
 		return assembler.toModel(curriculum);
 	}
 	
@@ -73,6 +76,7 @@ public class CurriculumControladorRestful {
 	public ResponseEntity<EntityModel<Curriculum>> createCurriculum(@RequestBody Curriculum curriculum) {
 		curriculum.setStatus(Status.CV_SUBIDO);
 		Curriculum nuevoCurriculum = repository.save(curriculum);
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity.created(
 						WebMvcLinkBuilder.linkTo(
 								WebMvcLinkBuilder.methodOn(
@@ -99,6 +103,7 @@ public class CurriculumControladorRestful {
 		if (curriculumActualizado.getStatus() == Status.CV_SUBIDO) {
 			curriculumActualizado.setStatus(Status.CV_VALIDADO);
 		}
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity.ok(assembler.toModel(repository.save(curriculumActualizado)));
 	}
 	
@@ -113,9 +118,10 @@ public class CurriculumControladorRestful {
 		
 		if (curriculumActualizado.getStatus() == Status.CV_SUBIDO) {
 			curriculumActualizado.setStatus(Status.CV_INVALIDADO);
+			SecurityContextHolder.getContext().getAuthentication();
 			return ResponseEntity.ok(assembler.toModel(repository.save(curriculumActualizado)));
 		}
-		
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity
 		.status(HttpStatus.METHOD_NOT_ALLOWED)
 		.header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
