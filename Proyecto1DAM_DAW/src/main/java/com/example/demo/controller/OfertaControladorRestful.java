@@ -12,6 +12,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,12 +80,15 @@ public class OfertaControladorRestful {
 	public EntityModel<Oferta> readOferta(@PathVariable int id) {
 		Oferta oferta = repositoryOferta.findById(id)
 				.orElseThrow(() -> new OfertaNotFoundException(id));
+		SecurityContextHolder.getContext().getAuthentication();
 		return assembler.toModel(oferta);
 	}
 	
 	@PostMapping("/apirestful/ofertas")
 	public ResponseEntity<?> createOferta(@RequestBody Oferta oferta) {
-		EntityModel<Oferta> ofertaEntityModel = assembler.toModel(repositoryOferta.save(oferta));
+		Oferta savedOferta = repositoryOferta.save(oferta);
+		EntityModel<Oferta> ofertaEntityModel = assembler.toModel(savedOferta);
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity
 				.created(ofertaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
 				.body(ofertaEntityModel);
@@ -96,6 +100,7 @@ public class OfertaControladorRestful {
 		oferta.getEmpresa().setIdEmpresa(idEmpresa);
 		//SetOfertaByIdEmpresa()
 		EntityModel<Oferta> ofertaEntityModel = assembler.toModel(repositoryOferta.save(oferta));
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity
 				.created(ofertaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
 				.body(ofertaEntityModel);
@@ -113,23 +118,26 @@ public class OfertaControladorRestful {
 					ofertaCambiada.setFunciones(oferta.getFunciones());
 					ofertaCambiada.setTipoContrato(oferta.getTipoContrato());
 					ofertaCambiada.setTitulo(oferta.getTitulo());
+					SecurityContextHolder.getContext().getAuthentication();
 					return repositoryOferta.save(ofertaCambiada);
 				})
 			    .orElseGet( () -> {
 			        oferta.setIdOferta(id);
+					SecurityContextHolder.getContext().getAuthentication();
 			        return repositoryOferta.save(oferta);
 		    	});
 		
 		EntityModel<Oferta> OfertaEntityModel = assembler.toModel(ofertaActualizada);
-
-		  return ResponseEntity
-		      .created(OfertaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-		      .body(OfertaEntityModel);
+		SecurityContextHolder.getContext().getAuthentication();
+		return ResponseEntity
+				.created(OfertaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+		      	.body(OfertaEntityModel);
 	}
 	
 	@DeleteMapping("/apirestful/ofertas/{id}")
 	ResponseEntity<?> deleteEmpresa(@PathVariable int id) {
 		repositoryOferta.deleteById(id);
+		SecurityContextHolder.getContext().getAuthentication();
 		return ResponseEntity.noContent().build();
 	} 
 }
