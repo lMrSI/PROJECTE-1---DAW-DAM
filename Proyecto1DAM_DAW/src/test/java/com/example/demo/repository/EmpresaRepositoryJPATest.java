@@ -1,51 +1,51 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.Empresa;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @DataJpaTest
-//@SpringBootTest //Levanta todo el servicio para el test de implementaion
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) //Para hacer test con db original en container
-//@Rollback //Revierte los cambios hecho en la bd
-class EmpresaRepositoryTest {
-    @Autowired
-    private TestEntityManager entityManager;
-    @Autowired
-    private EmpresaRepository repositoryEmpresa;
+class EmpresaRepositoryJPATest {
+    @Autowired private TestEntityManager entityManager;
+    @Autowired private EmpresaRepository repositoryEmpresa; //SUT
 
-    /*@BeforeEach
-    void setup(){
-    }
-    */
-
-    private Empresa insertDemoEmpresa(Empresa empresa) {
+    private Empresa createEmpresaDemo(Empresa empresa) {
         entityManager.persist(empresa);
         entityManager.flush();
         return empresa;
     }
-    @Test
-    void findAllWithDemo(){
-        Empresa empresa1 = new Empresa("Amazon", "Cloud", "Gigante", "S.A", "USA", null);
-        empresa1 = insertDemoEmpresa(empresa1);
-        assertEquals(3, empresa1.getIdEmpresa());
-        List<Empresa> empresas = repositoryEmpresa.findAll();
-        assertEquals(3, empresas.size());
+
+
+    @Test //TEST 1: getter i setters
+    void TestGettersSetters() {
+        Empresa empresa = new
+                Empresa(
+                "Amazon",
+                "Cloud",
+                "Gigante",
+                "S.A",
+                "USA",
+                null);
+        Empresa empresaCreada = createEmpresaDemo(empresa);
+        assertEquals(8, empresaCreada.getIdEmpresa());
     }
+    @Test //TEST 2: findAll
+    void TestFindAllWithDemo(){
+        List<Empresa> empresas = repositoryEmpresa.findAll();
+        assertEquals(2, empresas.size());
+    }
+
     @Test
-    @Sql("InsertsTests.sql")
-    void findAllWithSql(){
+    @Sql("InsertsTests.sql") //Sentencias SQL en archivo
+    void TestFindAllWithSql(){
         List<Empresa> empresas = repositoryEmpresa.findAll();
         assertEquals(4, empresas.size());
         assertEquals(1, empresas.get(0).getIdEmpresa());
@@ -53,9 +53,9 @@ class EmpresaRepositoryTest {
 
 
     @Test
-    void findTopByOrderByIdEmpresaDesc() {
+    void TestFindTopByOrderByIdEmpresaDesc() {
         Empresa nuevaEmpresa = new Empresa("Amazon", "Cloud", "Gigante", "S.A", "USA", null);
-        insertDemoEmpresa(nuevaEmpresa);
+        createEmpresaDemo(nuevaEmpresa);
         Empresa empresa = repositoryEmpresa.findTopByOrderByIdEmpresaDesc();
         assertEquals(nuevaEmpresa.getNombre(), empresa.getNombre());
     }

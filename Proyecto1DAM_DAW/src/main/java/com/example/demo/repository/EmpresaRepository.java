@@ -9,9 +9,7 @@ import java.util.List;
 
 @Repository
 public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
-	Empresa findTopByOrderByIdEmpresaDesc();  //Busca la ultima oferta
-
-	//Para Tests
+	Empresa findTopByOrderByIdEmpresaDesc();  //Para buscar ultima oferta añadida
 	List<Empresa> findAllByTamaño(String tamaño);
 	List<Empresa> findAllByUbicacion(String ubicacion);
 

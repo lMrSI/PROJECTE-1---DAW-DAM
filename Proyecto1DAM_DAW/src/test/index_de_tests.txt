@@ -1,0 +1,91 @@
+1.1-Tests en la capa de persistencia: elementos
+* Paths
+    - src/test/java/com/example/demo/repository/EmpresaRepositoryJPATest.java
+    - src/test/resources/com/example/demo
+
+* Asignación a una clase que sea test de persistencia JPA
+    - @DataJPATest
+
+* Conexion con bbdd para el test.
+    - @BeforeEach void setup() {} con metodos CRUD de TestEntity
+    - clase @Test con metodos CRUD de TestEntity: persist, flush
+
+* Tests
+    - @Test + tests methods: assertEquals, assumeTrue, fail("message"), @BeforeAll, BeforeEach, AfterEach, AfterAll
+    - @Sql +  tests methods
+    - sut: System Under Test
+
+*
+    - @AutoconfigureTestDatabase:
+
+* Revertir los cambios hechos en la bbdd
+    - @Rollback:
+
+
+
+1.2-Explicacion Anotaciones y metodos para Test
+
+*   @SpringBootTest:
+    Incia to-do spring para tests de integración
+
+*   @AutoConfigureTestDatabase:
+    Para hacer tests con bbdd original en container
+    -   (replace = AutoConfigureTestDatabase.Replace.NONE)
+
+*   @DataJPA
+    Para tests en capa de persisntecia. Se enfoca en componentes JPA
+    -   TestEntityManager : para conectar con BBDD, entidad que proporciona DataJPA
+        .persist(ObjetoEntidad): Persiste el objeto creado
+        .flush(): sincroniza el objeto con la bbdd
+
+
+
+===========================
+JPA QUERY METHODS
+- CORE
+save(E entity):
+    Guarda objeto en la bbdd
+List<Entity> findAll():
+    Devuelve lista de objetos en la bbdd
+int count():
+    Devuelve numero de objetos en la bbdd
+List<Entity> findAllByPropertie(Type propertie):
+    Devuelve lista de objetos en la bbdd filtrado por propiedad
+Optional<Entity> findByProperty():
+    Devuelve opcional de objeto en la bbdd
+delete(Type Entity):
+    Borra objeto de la bbdd
+boolean existsById(int id):
+    Devuelve boolean si existe o no en la bbdd
+
+- FIND = WHERE
+List<Entity> findByProp1AndProp2AndPropN(t val1, t val2, t valn)
+    WHERE prop1 = val1 AND prop2 = val2 AND propn = valn
+List<Entity> findByProp1OrProp2OrPropN(t val1, t val2, t valn)
+    WHERE prop1 = val1 OR prop2 = val2 OR propn = valn
+List<Entity> findByProp(t val) / findByPropIs(t val) / findByPropEquals(t val)
+    WHERE prop = val
+List<Entity> findByPropBetween(t val1, t val2)
+    WHERE prop BETWEEN val1 AND val2
+List<Entity> findByPropLessThan(t numericVal)
+    WHERE prop < val
+List<Entity> findByPropLessThanEqual(t numericVal)
+    WHERE prop <= val
+List<Entity> findByPropGreaterThan(t numericVal)
+    WHERE prop > val
+List<Entity> findByPropBefore(t dateVal)
+    WHERE prop < val
+List<Entity> findByPropAfter(t dateVal)
+    WHERE prop < val
+List<Entity> findByPropIsNull()
+    WHERE prop IS NULL
+List<Entity> findByPropLike(t val)
+    WHERE prop LIKE
+- FIND + ORDERBY
+List<Entity> findAllOrderByPropAsc()
+Entity findByTopByOrderByProp2Asc()
+List<Entity> findByProp1OrderByProp2Asc(t val1)
+List<Entity> findByProp1OrderByProp2Desc(t val1)
+
+
+

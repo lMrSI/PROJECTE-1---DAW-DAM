@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 
 import jakarta.persistence.Entity;
@@ -24,14 +25,23 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="empresas")
 public class Empresa {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Schema(example = "1", description = "identificador de empresa")
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idEmpresa;
+
+	@Schema(example = "Google", description = "Nombre de la empresa")
 	private String nombre;
 
+	@Schema(example = "Telecomunicaciones", description = "Indica actividad laboral de la empresa")
 	private String sector;
+
+	@Schema(example = "Grande", description = "Indica el volumen de trabajadores")
 	private String tamaño;
+
+	@Schema(example = "S.A", description = "Indica el tipo de sociedad de la empresa")
 	private String tipo;
+
+	@Schema(example = "Barcelona - Poblenou", description = "Indica la localidad i el barrio de las oficinas de la empresa")
 	private String ubicacion;
 	
 	@OneToMany(mappedBy="empresa", cascade = CascadeType.ALL, orphanRemoval = true) //PERSIST , MERGE , REMOVE , REFRESH , DETACH | targetEntity=Empresa
