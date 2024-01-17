@@ -1,22 +1,15 @@
 package com.example.demo.model;
+import java.util.List;
 import java.util.Objects;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-import jakarta.persistence.Table;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.FetchType;
 @Entity
 @Table(name="ofertas")
 public class Oferta {
@@ -24,13 +17,13 @@ public class Oferta {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idEmpresa")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-
-	
 	//IGNORA EMPRESA DE LAS OFERTAS y evita bucle --> NO MUESTRA EMPRESA
 	//@JsonIgnore
 	//IGNORA ATRIBUTO OFERTA DE LAS EMPRESAS y evita bucle --> MANEJA EMPRESAS SIN OFERTAS(tambien con idEmpresa)
 	@JsonIgnoreProperties("ofertas")
 	private Empresa empresa; //clave foranea
+
+
 
 	@Schema(example = "1", description = "Identificador de la oferta")
 	@Id
@@ -50,9 +43,21 @@ public class Oferta {
 	private String titulo;
 
 
-
+	@OneToMany(mappedBy ="oferta", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties("oferta")
+	private List<Usuario> usuarios;
 
 	public Oferta() {}
+
+	public Oferta(Empresa empresa, int idOferta, String descripcion, String funciones, String tipoContrato, String titulo, List<Usuario> usuarios) {
+		this.empresa = empresa;
+		this.idOferta = idOferta;
+		this.descripcion = descripcion;
+		this.funciones = funciones;
+		this.tipoContrato = tipoContrato;
+		this.titulo = titulo;
+		this.usuarios = usuarios;
+	}
 
 	public int getIdOferta() {
 		return idOferta;
@@ -101,6 +106,14 @@ public class Oferta {
 
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
+	}
+
+	public List<Usuario> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(List<Usuario> usuarios) {
+		this.usuarios = usuarios;
 	}
 
 	@Override

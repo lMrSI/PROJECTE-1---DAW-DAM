@@ -1,0 +1,37 @@
+PASOS DOCKER
+
+- cuando la app este lista para empaquetar -> cambiar <version> del POM de SNAPSHOT a v1
+- Con Maven, con las utilidades de ciclo de vida, USAR CLEAN (ES COMUN DESPUES USAR INSTALL, PARA AQUELLAS DEPENDENCIAS QUE FALTAN)
+- Con Maven, con las utilidades de ciclo de vida, USAR PACKAGE -> Genera archivo .JAR, y tambien prueba los tests
+- cambiar a nombre: springboot_fct_app
+- Dockerfile:
+	* Se hace import de una imagen con jdk (v17)
+	* se guarda la variable del path del archivo jdk
+	* Se copia el jdk al contenedor
+	* Se expone el puerto en el que corre la app : EXPOSE 8070
+- Se ejecuta el Dockerfile(dentro del directorio raiz: ../Proyecto1DAM_DAW):
+		docker build -t springboot_fct_app:snapshot1 .
+- Documentar capturas:
+- Una vez creada la imagen se asigna un tag que se corresponda con el registro dockerhub para guardarlo en la nube:
+
+	1. docker tag springboot_fct_app:snapshot1 iticbcndam13/projecte1:snapshot1
+
+    2 logearse:
+	    docker login -u iticbcndam13
+	    password: dckr_pat_I3avnnvJmRM0xAjHRX4ngMr6V6w
+	2. subir imagen:
+		docker push iticbcndam13/projecte1:snapshot1
+	
+	3. descargar imagen:
+	    docker pull iticbcndam13/projecte1:snapshot1 (si estas logeado)
+	
+	4. arrencar contenidor:
+	    docker run -d -p 8080:8070 -t iticbcndam13/projecte1:snapshot1 --name springapp
+	
+	5. Indicaciones de usoete
+		Acceder a ip http://localhost:8080/swagger
+	
+	- otros comandos
+	docker image list
+	docker start, stop, stat
+PASOS DOCKER COMPOSE

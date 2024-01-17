@@ -26,8 +26,7 @@ import jakarta.persistence.Table;
 @Table(name="empresas")
 public class Empresa {
 	@Schema(example = "1", description = "identificador de empresa")
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idEmpresa;
 
 	@Schema(example = "Google", description = "Nombre de la empresa")

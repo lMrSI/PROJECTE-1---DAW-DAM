@@ -35,4 +35,4 @@ build/
 
 ### Eclipse ###
 pom.properties
-pom.properties
+bin
