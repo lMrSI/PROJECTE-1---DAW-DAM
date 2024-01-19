@@ -2,24 +2,32 @@ version: "3"
 services:
   db:
     image: mysql
-    container_name: mysql:5.7
-    restart: always
+    container_name: mysql
+    #restart: always
     environment:
       - MYSQL_DATABASE=borsa_treball
-      - MYSQL_USER=fct
-      - MYSQL_PASSWORD=fct
-      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=user
+      - MYSQL_ROOT_PASSWORD=
     ports:
-      - 3306:3306
-    expose:
-      - "3306"
+      - 3306:3366
     volumes:
-      - my-db:/var/lib/mysql
-#services:
-#  myservice:
-#    restart: "no"
-
-#    build: .
-
-#    ports:
-#      - 8070:8080/tcp
+      - ./dump:/docker-entrypoint-initdb.d
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db:db
+    ports:
+      - 8000:80
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_ROOT_PASSWORD:
+  backend:
+    image: springboot_fct_app:snapshot2
+    container_name: spring-backend
+    ports:
+      - 8070:8070
+    depends_on:
+      - db
+#docker-compose up -d

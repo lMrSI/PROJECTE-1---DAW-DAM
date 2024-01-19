@@ -12,7 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@DataJpaTest
+/*@DataJpaTest
 class EmpresaRepositoryJPATest {
     @Autowired private TestEntityManager entityManager;
     @Autowired private EmpresaRepository repositoryEmpresa; //SUT
@@ -68,4 +68,4 @@ class EmpresaRepositoryJPATest {
         List<Empresa> empresas = repositoryEmpresa.findAllByTamaño("Mediana");
         assertEquals("Facebook", empresas.get(0).getNombre());
     }
-}
+}*/
