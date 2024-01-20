@@ -10,23 +10,23 @@ PASOS DOCKER
 	* Se copia el jdk al contenedor
 	* Se expone el puerto en el que corre la app : EXPOSE 8070
 - Se ejecuta el Dockerfile(dentro del directorio raiz: ../Proyecto1DAM_DAW):
-		docker build -t springboot_fct_app:snapshot1 .
+		docker build -t springboot_fct_app:<poner tag> .
 - Documentar capturas:
 - Una vez creada la imagen se asigna un tag que se corresponda con el registro dockerhub para guardarlo en la nube:
 
-	1. docker tag springboot_fct_app:snapshot1 iticbcndam13/projecte1:snapshot1
+	1. docker tag springboot_fct_app:<poner tag> iticbcndam13/projecte1:<poner tag>
 
     2 logearse:
 	    docker login -u iticbcndam13
 	    password: dckr_pat_I3avnnvJmRM0xAjHRX4ngMr6V6w
 	2. subir imagen:
-		docker push iticbcndam13/projecte1:snapshot1
+		docker push iticbcndam13/projecte1:<poner tag>
 	
 	3. descargar imagen:
-	    docker pull iticbcndam13/projecte1:snapshot1 (si estas logeado)
+	    docker pull iticbcndam13/projecte1:<poner tag> (si estas logeado)
 	
 	4. arrencar contenidor:
-	    docker run -d -p 8080:8070 -t iticbcndam13/projecte1:snapshot1 --name springapp
+	    docker run -d -p 8080:8070 -t iticbcndam13/projecte1:<poner tag> --name springapp
 	
 	5. Indicaciones de usoete
 		Acceder a ip http://localhost:8080/swagger
@@ -35,3 +35,11 @@ PASOS DOCKER
 	docker image list
 	docker start, stop, stat
 PASOS DOCKER COMPOSE
+Se arrancaran 3 servicios correspondientes a 3 imagenes de dockerhub:
+    1. la base de datos: mysql
+        redirige puerto 3306 de contenedor a 3306 en host
+    2. la apirest: projecte1:app
+        redirige puerto 8070 de contenedor a 8080 en host
+    3. phpmyadmin para gui de base de datos
+        redirige puerto 80 de contenedor a 8000 en host
+

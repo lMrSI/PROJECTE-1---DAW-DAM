@@ -40,8 +40,9 @@ public class UsuarioService {
 
         Usuario user = new Usuario(
                 null,
+                null,
                 usuarioDTO.username(),
-                passwordEncoder.encode(usuarioDTO.password()),
+                passwordEncoder.encode(pass),
                 usuarioDTO.email(),
                 List.of(UserAuthority.READ),
                 rol

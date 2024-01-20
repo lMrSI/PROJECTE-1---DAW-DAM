@@ -38,14 +38,18 @@ public class SecurityConfig {
     MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
         return new MvcRequestMatcher.Builder(introspector);
     }
+
     @Bean
     @SuppressWarnings("removal")
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.headers().frameOptions().disable(); //muestra h2 correctamente
 
+        //permite acceso a h2
         http.authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()//permite acceso a h2
+                        .requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
+                        .requestMatchers(antMatcher("/docs/**")).permitAll()
+                        .requestMatchers(antMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(mvc.pattern("/auth/**")).permitAll()
                         .anyRequest().authenticated());
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
