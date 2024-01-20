@@ -45,10 +45,11 @@ public class SecurityConfig {
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.headers().frameOptions().disable(); //muestra h2 correctamente
 
-        //.requestMatchers(PathRequest.toH2Console()).permitAll()//permite acceso a h2
+        //permite acceso a h2
         http.authorizeHttpRequests((auth) -> auth
                         .requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
                         .requestMatchers(antMatcher("/docs/**")).permitAll()
+                        .requestMatchers(antMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(mvc.pattern("/auth/**")).permitAll()
                         .anyRequest().authenticated());
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -50,7 +50,7 @@ public class EmpresaControladorRestful {
 	}
 
 	@Operation(summary = "read empresas", description = "Busca y devuelve todas las empresas")
-	@SecurityRequirement(name = "Bearer Authentication")
+	//@SecurityRequirement(name = "Bearer Authentication")
 	@ApiResponses(
 			value = {
 				@ApiResponse(

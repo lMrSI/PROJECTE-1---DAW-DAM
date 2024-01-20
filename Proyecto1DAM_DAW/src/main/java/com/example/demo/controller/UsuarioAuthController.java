@@ -6,6 +6,7 @@ import com.example.demo.dto.UsuarioRegisterDTO;
 import com.example.demo.model.Usuario;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UsuarioService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,12 +28,13 @@ public class UsuarioAuthController {
     private JwtTokenProvider jwtTokenProvider;
 
 
-
+    @SecurityRequirements
     @PostMapping("/auth/register")
     public Usuario save(@RequestBody UsuarioRegisterDTO userDTO){
         return this.userService.save(userDTO);
     }
 
+    @SecurityRequirements
     @PostMapping("/auth/login")
     public LoginResponse login(@RequestBody LoginRequest loginDTO){
         Authentication authDTO = new UsernamePasswordAuthenticationToken(loginDTO.username(), loginDTO.password());
