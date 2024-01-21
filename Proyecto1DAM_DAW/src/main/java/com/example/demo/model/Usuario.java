@@ -38,36 +38,25 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     private List<UserAuthority> authorities = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    private Rol rol;
 
     public Usuario() {
     }
 
-    public Usuario(Oferta oferta, Long idUsuario, String username, String password, String email, List<UserAuthority> authorities, Rol rol) {
+    public Usuario(Oferta oferta, Long idUsuario, String username, String password, String email, List<UserAuthority> authorities) {
         this.oferta = oferta;
         this.idUsuario = idUsuario;
         this.username = username;
         this.password = password;
         this.email = email;
         this.authorities = authorities;
-        this.rol = rol;
     }
 
-    public <E> Usuario(Object o, String username, String encode, String email, List<E> read, Rol rol) {
+    public <E> Usuario(Object o, String username, String encode, String email, List<E> read) {
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.toString())).toList();
-    }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
     }
 
     public Oferta getOferta() {

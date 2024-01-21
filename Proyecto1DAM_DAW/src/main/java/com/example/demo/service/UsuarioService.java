@@ -28,14 +28,15 @@ public class UsuarioService {
 
     public Usuario save(UsuarioRegisterDTO usuarioDTO) {
         String pass = usuarioDTO.password();
-        Rol rol;
+        UserAuthority ROLE;
         if (pass.equals("admin"))
-            rol = Rol.ROLE_ADMIN;
-        else if (pass.equals("itic"))
-            rol = Rol.ROLE_PROFESOR;
+            ROLE = UserAuthority.ROLE_ADMIN;
+        else if (pass.equals("profe"))
+            ROLE = UserAuthority.ROLE_PROFE;
+        else if (pass.equals("empresa"))
+            ROLE = UserAuthority.ROLE_EMPRESA;
         else
-            rol = Rol.ROLE_ALUMNO;
-        System.out.println("este es el rol:" + rol);
+            ROLE = UserAuthority.ROLE_ALUMNE;
 
 
         Usuario user = new Usuario(
@@ -44,9 +45,7 @@ public class UsuarioService {
                 usuarioDTO.username(),
                 passwordEncoder.encode(pass),
                 usuarioDTO.email(),
-                List.of(UserAuthority.READ),
-                rol
-
+                List.of(UserAuthority.READ, UserAuthority.WRITE, ROLE)
         );
         return this.repository.save(user);
     }
