@@ -1,134 +1,105 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
-@Table(name="usuarios")
+@Entity @Table(name="usuarios")
 public class Usuario implements UserDetails {
-
-
-    /////////////////
-    /////////////
-    ///////////
-    //DEBE SER DE MANY TO MANY
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "idOferta")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties("usuarios")
-    private Oferta oferta;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //P R O P I E D A D E S
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            }, mappedBy = "usuarios")
+    @JsonIgnore
+    private List<Oferta> ofertas;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUsuario;
     private String username;
     private String password;
-    @Column(unique = true)
     private String email;
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER) @Enumerated(EnumType.STRING)
     private List<UserAuthority> authorities = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    private Rol rol;
-
+    //C O N S T R U C T O R
     public Usuario() {
     }
-
-    public Usuario(Oferta oferta, Long idUsuario, String username, String password, String email, List<UserAuthority> authorities, Rol rol) {
-        this.oferta = oferta;
+    public Usuario(List<Oferta> ofertas, Long idUsuario, String username, String password, String email, List<UserAuthority> authorities) {
+        this.ofertas = ofertas;
         this.idUsuario = idUsuario;
         this.username = username;
         this.password = password;
         this.email = email;
         this.authorities = authorities;
-        this.rol = rol;
+    }
+    public <E> Usuario(Object o, String username, String encode, String email, List<E> read) {
     }
 
-    public <E> Usuario(Object o, String username, String encode, String email, List<E> read, Rol rol) {
-    }
-
+    //G E T T E R S   I   S E T T E R S
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.toString())).toList();
+        return this.authorities
+                .stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.toString()))
+                .toList();
     }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
-    }
-
-    public Oferta getOferta() {
-        return oferta;
-    }
-
-    public void setOferta(Oferta oferta) {
-        this.oferta = oferta;
-    }
-
     public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
     }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
-
-    @Override
-    public String getPassword() {
-        return this.password;
+    public List<Oferta> getOfertas() {
+        return ofertas;
+    }
+    public void setOfertas(List<Oferta> ofertas) {
+        this.ofertas = ofertas;
     }
 
     @Override
     public String getUsername() {
         return this.username;
     }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
     @Override
     public boolean isEnabled() {
         return true;
     }
 
-    public Long getIdUsuario() {
-        return idUsuario;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 }

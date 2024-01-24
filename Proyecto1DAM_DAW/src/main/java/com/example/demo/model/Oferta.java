@@ -14,13 +14,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name="ofertas")
 public class Oferta {
 	@Schema(example = "1", description = "Datos de la empresa a la que pertence")
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idEmpresa")
-	@OnDelete(action = OnDeleteAction.CASCADE)
+	@ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "idEmpresa") @OnDelete(action = OnDeleteAction.CASCADE)
 	//IGNORA EMPRESA DE LAS OFERTAS y evita bucle --> NO MUESTRA EMPRESA
-	//@JsonIgnore
+	@JsonIgnore
 	//IGNORA ATRIBUTO OFERTA DE LAS EMPRESAS y evita bucle --> MANEJA EMPRESAS SIN OFERTAS(tambien con idEmpresa)
-	@JsonIgnoreProperties("ofertas")
+	//@JsonIgnoreProperties("ofertas")
 	private Empresa empresa; //clave foranea
 
 
@@ -43,8 +41,13 @@ public class Oferta {
 	private String titulo;
 
 
-	@OneToMany(mappedBy ="oferta", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties("oferta")
+	@ManyToMany(fetch = FetchType.LAZY,
+			cascade = {
+					CascadeType.PERSIST,
+					CascadeType.MERGE
+			})
+	@JoinTable(name = "oferta_usurios", joinColumns = @JoinColumn(name = "id_oferta"), inverseJoinColumns = @JoinColumn(name = "id_usuario"))
+
 	private List<Usuario> usuarios;
 
 	public Oferta() {}
