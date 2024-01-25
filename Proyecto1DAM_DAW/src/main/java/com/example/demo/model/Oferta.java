@@ -13,45 +13,29 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name="ofertas")
 public class Oferta {
-	@Schema(example = "1", description = "Datos de la empresa a la que pertence")
+	// P R O P I E D A D E S
 	@ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "idEmpresa") @OnDelete(action = OnDeleteAction.CASCADE)
-	//IGNORA EMPRESA DE LAS OFERTAS y evita bucle --> NO MUESTRA EMPRESA
 	@JsonIgnore
-	//IGNORA ATRIBUTO OFERTA DE LAS EMPRESAS y evita bucle --> MANEJA EMPRESAS SIN OFERTAS(tambien con idEmpresa)
-	//@JsonIgnoreProperties("ofertas")
-	private Empresa empresa; //clave foranea
-
-
-
+	private Empresa empresa;
 	@Schema(example = "1", description = "Identificador de la oferta")
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idOferta;
-
-	@Schema(example = "Esta es la descripcion de las condiciones de la oferta",
-			description = "Explicacion e introduccion de la oferta")
-	private String descripcion;
-	@Schema(example = "Mantenimiento de red, de web, ...",
-			description = "Indica una lista de principales tareas del cargo")
-	private String funciones;
-
-	@Schema(example = "DUAL", description = "Indica el tipo de convenio de las practicas: FCT o DUAL")
-	private String tipoContrato;
-	@Schema(example = "Tecnico informatico", description = "Indica un perfil del cargo de la oferta")
+	@Schema(example = "Programador Junior Java", description = "Título")
 	private String titulo;
-
-
-	@ManyToMany(fetch = FetchType.LAZY,
-			cascade = {
-					CascadeType.PERSIST,
-					CascadeType.MERGE
-			})
+	@Schema(example = "Desarollo de aplicaciones multiplataforma", description = "descripción de la oferta")
+	private String descripcion;
+	@Schema(example = "Analisís de código con SpringBoot", description = "Tareas de la oferta")
+	private String funciones;
+	@Schema(example = "FCT", description = "Tipo de prácticas")
+	private String tipoContrato;
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "oferta_usurios", joinColumns = @JoinColumn(name = "id_oferta"), inverseJoinColumns = @JoinColumn(name = "id_usuario"))
-
+	@JsonIgnore
 	private List<Usuario> usuarios;
 
-	public Oferta() {}
 
+	//C O N S T R U C T O R
+	public Oferta() {}
 	public Oferta(Empresa empresa, int idOferta, String descripcion, String funciones, String tipoContrato, String titulo, List<Usuario> usuarios) {
 		this.empresa = empresa;
 		this.idOferta = idOferta;
@@ -62,70 +46,57 @@ public class Oferta {
 		this.usuarios = usuarios;
 	}
 
+
+	//G E T T E R S   Y   S E T T E R S
 	public int getIdOferta() {
 		return idOferta;
 	}
-
 	public void setIdOferta(int idOferta) {
 		this.idOferta = idOferta;
 	}
-
 	public String getTitulo() {
 		return titulo;
 	}
-
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
-
 	public String getDescripcion() {
 		return descripcion;
 	}
-
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-
-
 	public String getFunciones() {
 		return funciones;
 	}
-
 	public void setFunciones(String funciones) {
 		this.funciones = funciones;
 	}
-
 	public String getTipoContrato() {
 		return tipoContrato;
 	}
-
 	public void setTipoContrato(String tipoContrato) {
 		this.tipoContrato = tipoContrato;
 	}
-
 	public Empresa getEmpresa() {
 		return empresa;
 	}
-
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
 	}
-
 	public List<Usuario> getUsuarios() {
 		return usuarios;
 	}
-
 	public void setUsuarios(List<Usuario> usuarios) {
 		this.usuarios = usuarios;
 	}
 
+
+	// O T R O S
 	@Override
 	public int hashCode() {
-
 		return Objects.hash(descripcion, empresa, funciones, idOferta, tipoContrato, titulo);
-
 	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -139,13 +110,16 @@ public class Oferta {
 				&& Objects.equals(funciones, other.funciones) && idOferta == other.idOferta
 				&& Objects.equals(tipoContrato, other.tipoContrato) && Objects.equals(titulo, other.titulo);
 	}
-
 	@Override
 	public String toString() {
-		return "String";
+		return "Oferta{" +
+				"empresa=" + empresa +
+				", idOferta=" + idOferta +
+				", titulo='" + titulo + '\'' +
+				", descripcion='" + descripcion + '\'' +
+				", funciones='" + funciones + '\'' +
+				", tipoContrato='" + tipoContrato + '\'' +
+				", usuarios=" + usuarios +
+				'}';
 	}
-	
-	
-	
-	
 }

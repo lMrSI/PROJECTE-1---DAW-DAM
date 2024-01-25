@@ -1,4 +1,6 @@
 package com.example.demo.dto;
 
-public record LoginRequest(String username, String password) {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record LoginRequest(@Schema(example = "alumno") String username, @Schema(example = "alumno") String password) {
 }
