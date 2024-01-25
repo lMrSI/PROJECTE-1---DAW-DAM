@@ -36,24 +36,20 @@ import jakarta.persistence.EntityNotFoundException;
 @RequestMapping("")
 @Tag(name="Empresas", description="APIRESTful de empresas con operaciones CRUD")
 public class EmpresaControladorRestful {
-	
-	
 	@Autowired
 	private final EmpresaRepository repository;
-	
 	@Autowired
 	private final OfertaRepository repositoryOferta;
-	
 	private final EmpresaModelAssembler assembler;
-	
+
+
 	public EmpresaControladorRestful(EmpresaRepository repository, OfertaRepository repositoryOferta, EmpresaModelAssembler assembler) {
 		this.repository = repository;
 		this.assembler = assembler;
 		this.repositoryOferta = repositoryOferta;
 	}
 
-	@Operation(summary = "read empresas", description = "Busca y devuelve todas las empresas")
-	//@SecurityRequirement(name = "Bearer Authentication")
+
 	@ApiResponses(
 			value = {
 				@ApiResponse(
@@ -68,9 +64,7 @@ public class EmpresaControladorRestful {
 				)
 		    }
 	)
-	//@Secured("ROLE_ADMIN")
-	//@RolesAllowed({"ROLE_ADMIN", "ROLE_PROFE", "ROLE_ALUMNE"})
-	//@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_PROFE') or hasAuthority('ROLE_ALUMNE')")
+	@Operation(summary = "read empresas", description = "Busca y devuelve todas las empresas")
 	@PreAuthorize("hasAuthority('READ')")
 	@GetMapping("/apirestful/empresas")	
 	public CollectionModel<EntityModel<Empresa>> readEmpresas() {
@@ -98,7 +92,7 @@ public class EmpresaControladorRestful {
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@PostMapping("/apirestful/empresas")
 	public ResponseEntity<?> createEmpresa(@RequestBody Empresa empresa) {
-		EntityModel<Empresa> empresaEntityModel = assembler.toModel(repository.save(empresa));
+		EntityModel<Empresa> empresaEntityModel = assembler.tooModel(repository.save(empresa));
 		return ResponseEntity
 				.created(empresaEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
 				.body(empresaEntityModel);
@@ -107,8 +101,8 @@ public class EmpresaControladorRestful {
 
 
 
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	@PostMapping("/apirestful/empresas/ofertas")
+	//@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	//@PostMapping("/apirestful/empresas/ofertas")
 	public ResponseEntity<?> createEmpresaAndOfertas(@RequestBody Empresa empresa) {
 		repository.save(empresa);
 		Empresa ultimaEmpresa = repository.findTopByOrderByIdEmpresaDesc();

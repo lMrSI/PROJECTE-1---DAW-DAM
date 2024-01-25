@@ -1,63 +1,49 @@
 package com.example.demo.config;
 
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-//import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import org.springdoc.core.utils.SpringDocUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.hateoas.Links;
 
 import java.util.Arrays;
 
 
 @Configuration
-/*@SecurityScheme(
-        name = "Bearer Authentication",
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        scheme = "bearer")
-
- */
 public class OpenApiConfig {
-    /*private final String moduleName;
-    private final String apiVersion;
-    public OpenApiConfig(
-            @Value("${module-name}") String moduleName,
-            @Value("${api-version}") String apiVersion) {
-        this.moduleName = moduleName;
-        this.apiVersion = apiVersion;
-    }*/
     @Bean
     public OpenAPI openApi() {
+        SpringDocUtils.getConfig().addResponseTypeToIgnore(Links.class);
         final String securitySchemeName = "bearerAuth";
         return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement()
-                        .addList(securitySchemeName, Arrays.asList("read", "write"))
+                //Bloquea todos los end-points con autentificación bearer
+                .addSecurityItem(
+                    new SecurityRequirement()
+                    .addList(securitySchemeName, Arrays.asList("read", "write"))
                 )
                 .components(
                     new Components()
-                        .addSecuritySchemes(securitySchemeName,
-                            new SecurityScheme()
-                                .name(securitySchemeName)
-                                .type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT")
-                                //.in(SecurityScheme.In.HEADER).name("Authorization")
+                    .addSecuritySchemes(
+                        securitySchemeName,
+                        new SecurityScheme()
+                        .name(securitySchemeName)
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")
                         )
                 )
+                //Modifica la información por defecto
                 .info(new Info()
-                        .title("APIREST DE BORSA DE TREBALL")
-                        .description("Documentacion de la APIREST de la aplicacion")
-                        .version("v1.0")
+                    .title("APIREST - BOLSA DE TRABAJO ITICBCN").version("v1.0")
+                    .description("Esta es una documentación de la APIREST que permite visualzar con ejemplos las funcionalidades que ofrece este proyecto")
                 )
                 .externalDocs(new ExternalDocumentation()
-                        .description("Tutorial de uso de la API").url("https://localhost:8070/docs"));
-
+                        .description("Documentación en formato JSON").url("https://localhost:8070/docs"));
     }
 }

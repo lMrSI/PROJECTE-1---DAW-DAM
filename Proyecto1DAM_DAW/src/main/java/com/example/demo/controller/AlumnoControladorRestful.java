@@ -27,14 +27,16 @@ public class AlumnoControladorRestful {
         this.repositoryUsuario = repositoryUsuario;
         this.assembler = assembler;
     }
-    @GetMapping("/apirestful/alumno/{id}/ofertas")
-    public CollectionModel<EntityModel<Oferta>> ofertasAlumno(@PathVariable("id") Long id) {
-        Usuario usuario = repositoryUsuario.findByIdUsuario(id);
+    @GetMapping("/apirestful/alumnos/{id}/ofertas")
+    //CollectionModel<EntityModel<Oferta>>
+    public Usuario ofertasAlumno(@PathVariable("id") Long id) {
+        return repositoryUsuario.findByIdUsuario(id);
+        /*Usuario usuario = repositoryUsuario.findByIdUsuario(id);
         List<EntityModel<Oferta>> ofertas = repositoryOferta.findOfertasByUsuarios(usuario).stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(ofertas,
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(OfertaControladorRestful.class).readOfertas()).withSelfRel());
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(OfertaControladorRestful.class).readOfertas()).withSelfRel());*/
     }
 
 
