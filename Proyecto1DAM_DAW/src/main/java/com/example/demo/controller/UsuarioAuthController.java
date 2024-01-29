@@ -6,18 +6,20 @@ import com.example.demo.dto.UsuarioRegisterDTO;
 import com.example.demo.model.Usuario;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+@CrossOrigin("*") @RestController @RequestMapping("/auth")
+@Tag(name="Usuarios", description="Peticiones de usuario")
 public class UsuarioAuthController {
 
     @Autowired
@@ -28,14 +30,16 @@ public class UsuarioAuthController {
     private JwtTokenProvider jwtTokenProvider;
 
 
+    @Operation(summary = "registrar", description = "register")
     @SecurityRequirements
-    @PostMapping("/auth/register")
+    @PostMapping("/register")
     public Usuario save(@RequestBody UsuarioRegisterDTO userDTO){
         return this.userService.save(userDTO);
     }
 
+    @Operation(summary = "Autentificar", description = "login")
     @SecurityRequirements
-    @PostMapping("/auth/login")
+    @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest loginDTO){
         Authentication authDTO = new UsernamePasswordAuthenticationToken(loginDTO.username(), loginDTO.password());
 

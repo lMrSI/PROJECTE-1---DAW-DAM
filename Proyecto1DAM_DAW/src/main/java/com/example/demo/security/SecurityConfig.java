@@ -51,6 +51,7 @@ public class SecurityConfig {
 
         //permite acceso a h2
         http.authorizeHttpRequests((auth) -> auth
+                .requestMatchers(antMatcher("/swagger")).permitAll()
                         .requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
                         .requestMatchers(antMatcher("/docs/**")).permitAll()
                         .requestMatchers(antMatcher("/h2-console/**")).permitAll()

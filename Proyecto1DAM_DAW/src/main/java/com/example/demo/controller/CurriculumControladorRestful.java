@@ -3,25 +3,20 @@ package com.example.demo.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.exception.CurriculumNotFoundException;
 import com.example.demo.model.Curriculum;
@@ -29,99 +24,96 @@ import com.example.demo.model.CurriculumModelAssembler;
 import com.example.demo.model.Status;
 import com.example.demo.repository.CurriculumRepository;
 
-import jakarta.persistence.EntityNotFoundException;
-
-@RestController
-@RequestMapping("")
+@CrossOrigin("*") @RestController @RequestMapping("/apirest/curriculums")
+@Tag(name="Curriculums", description="Peticiones CRUD de curriculums")
 public class CurriculumControladorRestful {
-	
-	
+	// R E P O S  y  P R O P I E D A D E S
 	@Autowired
-	private final CurriculumRepository repository;
-	
-	private final CurriculumModelAssembler assembler;
-	
-	public CurriculumControladorRestful(CurriculumRepository repository, CurriculumModelAssembler assembler) {
-		this.repository = repository;
-		this.assembler = assembler;
+	private final CurriculumRepository repositoryCurriculum;
+	private final CurriculumModelAssembler assemblerCurriculum;
+
+
+	// C O N S T R U C T O R
+	public CurriculumControladorRestful(CurriculumRepository repositoryCurriculum, CurriculumModelAssembler assemblerCurriculum) {
+		this.repositoryCurriculum = repositoryCurriculum;
+		this.assemblerCurriculum = assemblerCurriculum;
 	}
-	
-	
-	@GetMapping("/apirestful/curriculums")	
+
+
+
+
+	// R E A D
+	@PreAuthorize("hasAuthority('ROLE_PROFE')")
+	@Operation(summary = "Listar CVs")
+	@GetMapping("/read")
 	public CollectionModel<EntityModel<Curriculum>> readCurriculums() {
-		List<EntityModel<Curriculum>> curriculums = repository.findAll().stream()
-			  .map(assembler::toModel)
+		List<EntityModel<Curriculum>> curriculums = repositoryCurriculum.findAll().stream()
+			  .map(assemblerCurriculum::toModel)
 			  .collect(Collectors.toList());
-		SecurityContextHolder.getContext().getAuthentication();
 		return CollectionModel.of(curriculums, 
 				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CurriculumControladorRestful.class).readCurriculums()).withSelfRel());
 	}
-	
-		
-	
-	
-	
-	@GetMapping("/apirestful/curriculums/{id}")
+	@PreAuthorize("hasAuthority('ROLE_PROFE')")
+	@Operation(summary = "Mostrar CV")
+	@GetMapping("/read/{id}")
 	public EntityModel<Curriculum> readCurriculum(@PathVariable int id) {
-		Curriculum curriculum = repository.findById(id)
+		Curriculum curriculum = repositoryCurriculum.findById(id)
 				.orElseThrow(() -> new CurriculumNotFoundException(id));
-		SecurityContextHolder.getContext().getAuthentication();
-		return assembler.toModel(curriculum);
+		return assemblerCurriculum.toModel(curriculum);
 	}
-	
-	
-	
-	
-	@PostMapping("/apirestful/curriculums")
+
+
+
+
+	// C R E A T E
+	@PreAuthorize("hasAuthority('ROLE_ALUMNE')")
+	@Operation(summary = "Crear CV")
+	@PostMapping("/create")
 	public ResponseEntity<EntityModel<Curriculum>> createCurriculum(@RequestBody Curriculum curriculum) {
 		curriculum.setStatus(Status.CV_SUBIDO);
-		Curriculum nuevoCurriculum = repository.save(curriculum);
-		SecurityContextHolder.getContext().getAuthentication();
-		return ResponseEntity.created(
+		Curriculum nuevoCurriculum = repositoryCurriculum.save(curriculum);
+		return ResponseEntity
+				.created(
 						WebMvcLinkBuilder.linkTo(
-								WebMvcLinkBuilder.methodOn(
-										CurriculumControladorRestful.class
-								)
-								.readCurriculum(
-										nuevoCurriculum.getIdCurriculum()
-								)
+								WebMvcLinkBuilder.methodOn(CurriculumControladorRestful.class)
+								.readCurriculum(nuevoCurriculum.getIdCurriculum())
 						)
 						.toUri()
 				)
-				.body(assembler.toModel(nuevoCurriculum));
+				.body(assemblerCurriculum.toModel(nuevoCurriculum));
 	}
-	
-	
-	
-	
-	@PutMapping("/apirestful/curriculums/{id}/validar_cv")
+
+
+
+
+	// U P D A T E: validar
+	@PreAuthorize("hasAuthority('ROLE_PROFE')")
+	@Operation(summary = "Validad CV")
+	@PutMapping("/validar/{id}")
 	public ResponseEntity<?> validarCurriculum(@PathVariable int id) {
 		Curriculum curriculumActualizado = 
-				repository.findById(id)
+				repositoryCurriculum.findById(id)
 			    .orElseThrow(() -> new CurriculumNotFoundException(id));
-		
 		if (curriculumActualizado.getStatus() == Status.CV_SUBIDO) {
 			curriculumActualizado.setStatus(Status.CV_VALIDADO);
 		}
-		SecurityContextHolder.getContext().getAuthentication();
-		return ResponseEntity.ok(assembler.toModel(repository.save(curriculumActualizado)));
+		return ResponseEntity.ok(assemblerCurriculum.toModel(repositoryCurriculum.save(curriculumActualizado)));
 	}
-	
-	
-	
 
-	@DeleteMapping("/apirestful/curriculums/{id}/invalidar_cv")
+
+
+	@PreAuthorize("hasAuthority('ROLE_PROFE')")
+	@Operation(summary = "Invalidar CV")
+	@DeleteMapping("/invalidar/{id}")
 	public ResponseEntity<?> invalidarCurriculum(@PathVariable int id) {
 		Curriculum curriculumActualizado = 
-				repository.findById(id)
+				repositoryCurriculum.findById(id)
 			    .orElseThrow(() -> new CurriculumNotFoundException(id));
-		
 		if (curriculumActualizado.getStatus() == Status.CV_SUBIDO) {
 			curriculumActualizado.setStatus(Status.CV_INVALIDADO);
-			SecurityContextHolder.getContext().getAuthentication();
-			return ResponseEntity.ok(assembler.toModel(repository.save(curriculumActualizado)));
+			return ResponseEntity.ok(assemblerCurriculum.toModel(repositoryCurriculum.save(curriculumActualizado)));
 		}
-		SecurityContextHolder.getContext().getAuthentication();
+
 		return ResponseEntity
 		.status(HttpStatus.METHOD_NOT_ALLOWED)
 		.header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)

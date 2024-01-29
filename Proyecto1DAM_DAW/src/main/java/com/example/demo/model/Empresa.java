@@ -1,24 +1,17 @@
 package com.example.demo.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
-
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
 import jakarta.persistence.OneToMany;
-
 import jakarta.persistence.Table;
 
 
@@ -40,7 +33,8 @@ public class Empresa {
 	@Schema(example = "Sabino Arana, 54, Les Corts, 08028 Barcelona", description = "dirección de sede")
 	private String ubicacion;
 	@OneToMany(mappedBy="empresa", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties({"idOferta", "empresa", "usuarios", "titulo", "descripcion", "funciones", "tipoContrato"})
+	//@JsonIgnoreProperties({"idOferta", "empresa", "usuarios", "titulo", "descripcion", "funciones", "tipoContrato"})
+	@JsonIgnore
 	private List<Oferta> ofertas;
 
 
